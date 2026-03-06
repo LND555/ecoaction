@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>EcoAction - Sustentabilidade</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#e8f5e9;
+text-align:center;
+}
+
+header{
+background:#2e7d32;
+color:white;
+padding:20px;
+}
+
+nav{
+background:#1b5e20;
+padding:10px;
+}
+
+nav button{
+background:none;
+border:none;
+color:white;
+margin:10px;
+font-size:16px;
+cursor:pointer;
+}
+
+section{
+display:none;
+padding:20px;
+}
+
+.active{
+display:block;
+}
+
+.card{
+background:white;
+padding:20px;
+margin:20px auto;
+border-radius:10px;
+width:80%;
+max-width:600px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+button.action{
+background:#2e7d32;
+color:white;
+border:none;
+padding:10px 15px;
+margin:10px;
+border-radius:5px;
+cursor:pointer;
+}
+
+footer{
+margin-top:40px;
+padding:20px;
+background:#2e7d32;
+color:white;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🌱 EcoAction</h1>
+<p>Educação Ambiental com Gamificação</p>
+</header>
+
+<nav>
+<button onclick="mostrar('inicio')">Início</button>
+<button onclick="mostrar('desafios')">Desafios</button>
+<button onclick="mostrar('quiz')">Quiz</button>
+<button onclick="mostrar('ranking')">Ranking</button>
+<button onclick="mostrar('perfil')">Perfil</button>
+</nav>
+
+<!-- INICIO -->
+
+<section id="inicio" class="active">
+
+<div class="card">
+
+<h2>Seus pontos</h2>
+<h1 id="pontos">0</h1>
+
+</div>
+
+</section>
+
+<!-- DESAFIOS -->
+
+<section id="desafios">
+
+<div class="card">
+
+<h2>Desafios Sustentáveis</h2>
+
+<button class="action" onclick="ganharPontos(10)">♻ Reciclei hoje (+10)</button>
+<button class="action" onclick="ganharPontos(5)">🚿 Economizei água (+5)</button>
+<button class="action" onclick="ganharPontos(15)">🚲 Usei transporte sustentável (+15)</button>
+<button class="action" onclick="ganharPontos(20)">🌳 Plantei uma árvore (+20)</button>
+
+</div>
+
+</section>
+
+<!-- QUIZ -->
+
+<section id="quiz">
+
+<div class="card">
+
+<h2>Quiz Ambiental</h2>
+
+<p id="pergunta"></p>
+
+<div id="respostas"></div>
+
+</div>
+
+</section>
+
+<!-- RANKING -->
+
+<section id="ranking">
+
+<div class="card">
+
+<h2>Ranking</h2>
+
+<ul id="listaRanking"></ul>
+
+</div>
+
+</section>
+
+<!-- PERFIL -->
+
+<section id="perfil">
+
+<div class="card">
+
+<h2>Perfil</h2>
+
+<input id="nome" placeholder="Digite seu nome">
+
+<br><br>
+
+<button class="action" onclick="salvarUsuario()">Salvar usuário</button>
+
+</div>
+
+</section>
+
+<footer>
+
+<h3>Criadores do Projeto</h3>
+
+Leonardo Ferreira<br>
+Leonardo Cruz<br>
+Maria Eduarda<br>
+Matheus Santos<br>
+Letícia Belleli Marques
+
+</footer>
+
+<script>
+
+let usuarios = JSON.parse(localStorage.getItem("eco_users")) || [];
+let usuarioAtual = null;
+
+function salvarUsuario(){
+
+let nome = document.getElementById("nome").value;
+
+if(usuarios.length >= 5){
+
+alert("Máximo de 5 usuários");
+
+return;
+
+}
+
+let novo = {nome:nome,pontos:0};
+
+usuarios.push(novo);
+
+usuarioAtual = novo;
+
+localStorage.setItem("eco_users", JSON.stringify(usuarios));
+
+alert("Usuário criado");
+
+atualizarRanking();
+
+}
+
+function ganharPontos(valor){
+
+if(!usuarioAtual){
+
+alert("Crie um usuário primeiro");
+
+return;
+
+}
+
+usuarioAtual.pontos += valor;
+
+localStorage.setItem("eco_users", JSON.stringify(usuarios));
+
+atualizar();
+
+atualizarRanking();
+
+}
+
+function atualizar(){
+
+if(usuarioAtual){
+
+document.getElementById("pontos").innerText = usuarioAtual.pontos;
+
+}
+
+}
+
+function mostrar(sec){
+
+document.querySelectorAll("section").forEach(s=>{
+
+s.classList.remove("active");
+
+});
+
+document.getElementById(sec).classList.add("active");
+
+}
+
+function atualizarRanking(){
+
+let lista = document.getElementById("listaRanking");
+
+if(!lista) return;
+
+lista.innerHTML="";
+
+usuarios.sort((a,b)=>b.pontos-a.pontos);
+
+usuarios.forEach((u,i)=>{
+
+lista.innerHTML += "<li>"+(i+1)+"º "+u.nome+" - "+u.pontos+" pontos</li>";
+
+});
+
+}
+
+let perguntas = [
+
+{
+p:"Qual lixeira é usada para papel?",
+r:["Azul","Verde","Vermelho"],
+c:0
+},
+
+{
+p:"Qual gás é responsável pelo efeito estufa?",
+r:["Oxigênio","Dióxido de carbono","Hélio"],
+c:1
+},
+
+{
+p:"Qual energia é renovável?",
+r:["Solar","Carvão","Petróleo"],
+c:0
+},
+
+{
+p:"Qual material demora mais para se decompor?",
+r:["Plástico","Papel","Casca de banana"],
+c:0
+},
+
+{
+p:"Qual atitude ajuda o planeta?",
+r:["Desperdiçar água","Reciclar","Queimar lixo"],
+c:1
+},
+
+{
+p:"Qual transporte é mais sustentável?",
+r:["Bicicleta","Carro","Moto"],
+c:0
+},
+
+{
+p:"O que devemos fazer com lixo reciclável?",
+r:["Separar","Misturar","Queimar"],
+c:0
+}
+
+];
+
+let atual=0;
+
+function carregarPergunta(){
+
+let q = perguntas[atual];
+
+document.getElementById("pergunta").innerText=q.p;
+
+let div = document.getElementById("respostas");
+
+div.innerHTML="";
+
+q.r.forEach((resp,i)=>{
+
+div.innerHTML +=
+"<button class='action' onclick='responder("+i+")'>"+resp+"</button>";
+
+});
+
+}
+
+function responder(i){
+
+let q = perguntas[atual];
+
+if(i===q.c){
+
+ganharPontos(10);
+
+alert("Correto");
+
+}else{
+
+alert("Errado");
+
+}
+
+atual++;
+
+if(atual<perguntas.length){
+
+carregarPergunta();
+
+}else{
+
+alert("Quiz finalizado");
+
+atual=0;
+
+carregarPergunta();
+
+}
+
+}
+
+carregarPergunta();
+atualizarRanking();
+
+</script>
+
+</body>
+</html>
