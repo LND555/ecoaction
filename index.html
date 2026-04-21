@@ -55,9 +55,10 @@ cursor:pointer;
 }
 footer{
 margin-top:40px;
-padding:20px;
+padding:15px;
 background:#2e7d32;
 color:white;
+font-size:14px;
 }
 ul{
 text-align:left;
@@ -155,6 +156,7 @@ text-align:left;
 </footer>
 
 <script>
+
 let usuarios = JSON.parse(localStorage.getItem("eco_users")) || [];
 let usuarioAtual = null;
 
@@ -263,6 +265,7 @@ carregarPergunta();
 
 carregarPergunta();
 atualizarRanking();
+
 </script>
 
 </body>
