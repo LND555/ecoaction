@@ -69,6 +69,10 @@ background:#2e7d32;
 color:white;
 }
 
+ul{
+text-align:left;
+}
+
 </style>
 </head>
 
@@ -85,27 +89,20 @@ color:white;
 <button onclick="mostrar('quiz')">Quiz</button>
 <button onclick="mostrar('ranking')">Ranking</button>
 <button onclick="mostrar('perfil')">Perfil</button>
+<button onclick="mostrar('reciclagem')">Reciclagem</button>
 </nav>
 
 <!-- INICIO -->
-
 <section id="inicio" class="active">
-
 <div class="card">
-
 <h2>Seus pontos</h2>
 <h1 id="pontos">0</h1>
-
 </div>
-
 </section>
 
 <!-- DESAFIOS -->
-
 <section id="desafios">
-
 <div class="card">
-
 <h2>Desafios Sustentáveis</h2>
 
 <button class="action" onclick="ganharPontos(10)">♻ Reciclei hoje (+10)</button>
@@ -114,67 +111,76 @@ color:white;
 <button class="action" onclick="ganharPontos(20)">🌳 Plantei uma árvore (+20)</button>
 
 </div>
-
 </section>
 
 <!-- QUIZ -->
-
 <section id="quiz">
-
 <div class="card">
-
 <h2>Quiz Ambiental</h2>
-
 <p id="pergunta"></p>
-
 <div id="respostas"></div>
-
 </div>
-
 </section>
 
 <!-- RANKING -->
-
 <section id="ranking">
-
 <div class="card">
-
 <h2>Ranking</h2>
-
 <ul id="listaRanking"></ul>
-
 </div>
-
 </section>
 
 <!-- PERFIL -->
-
 <section id="perfil">
+<div class="card">
+<h2>Perfil</h2>
+<input id="nome" placeholder="Digite seu nome">
+<br><br>
+<button class="action" onclick="salvarUsuario()">Salvar usuário</button>
+</div>
+</section>
+
+<!-- RECICLAGEM -->
+<section id="reciclagem">
 
 <div class="card">
+<h2>♻ Reciclagem</h2>
+<p>A reciclagem ajuda a reduzir o lixo e preservar o meio ambiente.</p>
 
-<h2>Perfil</h2>
+<h3>Tempo de decomposição</h3>
 
-<input id="nome" placeholder="Digite seu nome">
+<ul>
+<li><b>Papel:</b> 3 a 6 meses</li>
+<li><b>Plástico:</b> 100 a 400 anos</li>
+<li><b>Vidro:</b> mais de 1.000 anos</li>
+<li><b>Metal:</b> até 200 anos</li>
+<li><b>Casca de banana:</b> 2 a 4 semanas</li>
+<li><b>Garrafa PET:</b> mais de 400 anos</li>
+</ul>
+</div>
 
-<br><br>
+<div class="card">
+<h3>🌱 Dicas sustentáveis</h3>
 
-<button class="action" onclick="salvarUsuario()">Salvar usuário</button>
+<ul>
+<li>Separe corretamente o lixo</li>
+<li>Evite plástico descartável</li>
+<li>Economize água</li>
+<li>Reutilize materiais</li>
+<li>Descarte lixo eletrônico corretamente</li>
+</ul>
 
 </div>
 
 </section>
 
 <footer>
-
 <h3>Criadores do Projeto</h3>
-
 Leonardo Ferreira<br>
 Leonardo Cruz<br>
 Maria Eduarda<br>
 Matheus Santos<br>
 Letícia Belleli Marques
-
 </footer>
 
 <script>
@@ -187,17 +193,13 @@ function salvarUsuario(){
 let nome = document.getElementById("nome").value;
 
 if(usuarios.length >= 5){
-
 alert("Máximo de 5 usuários");
-
 return;
-
 }
 
 let novo = {nome:nome,pontos:0};
 
 usuarios.push(novo);
-
 usuarioAtual = novo;
 
 localStorage.setItem("eco_users", JSON.stringify(usuarios));
@@ -205,17 +207,15 @@ localStorage.setItem("eco_users", JSON.stringify(usuarios));
 alert("Usuário criado");
 
 atualizarRanking();
+atualizar();
 
 }
 
 function ganharPontos(valor){
 
 if(!usuarioAtual){
-
 alert("Crie um usuário primeiro");
-
 return;
-
 }
 
 usuarioAtual.pontos += valor;
@@ -223,7 +223,6 @@ usuarioAtual.pontos += valor;
 localStorage.setItem("eco_users", JSON.stringify(usuarios));
 
 atualizar();
-
 atualizarRanking();
 
 }
@@ -231,9 +230,7 @@ atualizarRanking();
 function atualizar(){
 
 if(usuarioAtual){
-
 document.getElementById("pontos").innerText = usuarioAtual.pontos;
-
 }
 
 }
@@ -241,9 +238,7 @@ document.getElementById("pontos").innerText = usuarioAtual.pontos;
 function mostrar(sec){
 
 document.querySelectorAll("section").forEach(s=>{
-
 s.classList.remove("active");
-
 });
 
 document.getElementById(sec).classList.add("active");
@@ -261,56 +256,20 @@ lista.innerHTML="";
 usuarios.sort((a,b)=>b.pontos-a.pontos);
 
 usuarios.forEach((u,i)=>{
-
 lista.innerHTML += "<li>"+(i+1)+"º "+u.nome+" - "+u.pontos+" pontos</li>";
-
 });
 
 }
 
 let perguntas = [
 
-{
-p:"Qual lixeira é usada para papel?",
-r:["Azul","Verde","Vermelho"],
-c:0
-},
-
-{
-p:"Qual gás é responsável pelo efeito estufa?",
-r:["Oxigênio","Dióxido de carbono","Hélio"],
-c:1
-},
-
-{
-p:"Qual energia é renovável?",
-r:["Solar","Carvão","Petróleo"],
-c:0
-},
-
-{
-p:"Qual material demora mais para se decompor?",
-r:["Plástico","Papel","Casca de banana"],
-c:0
-},
-
-{
-p:"Qual atitude ajuda o planeta?",
-r:["Desperdiçar água","Reciclar","Queimar lixo"],
-c:1
-},
-
-{
-p:"Qual transporte é mais sustentável?",
-r:["Bicicleta","Carro","Moto"],
-c:0
-},
-
-{
-p:"O que devemos fazer com lixo reciclável?",
-r:["Separar","Misturar","Queimar"],
-c:0
-}
+{p:"Qual lixeira é usada para papel?",r:["Azul","Verde","Vermelho"],c:0},
+{p:"Qual gás é responsável pelo efeito estufa?",r:["Oxigênio","CO2","Hélio"],c:1},
+{p:"Qual energia é renovável?",r:["Solar","Carvão","Petróleo"],c:0},
+{p:"Qual material demora mais para se decompor?",r:["Plástico","Papel","Banana"],c:0},
+{p:"Qual atitude ajuda o planeta?",r:["Desperdiçar água","Reciclar","Queimar lixo"],c:1},
+{p:"Qual transporte é mais sustentável?",r:["Bicicleta","Carro","Moto"],c:0},
+{p:"O que fazer com lixo reciclável?",r:["Separar","Misturar","Queimar"],c:0}
 
 ];
 
@@ -327,10 +286,7 @@ let div = document.getElementById("respostas");
 div.innerHTML="";
 
 q.r.forEach((resp,i)=>{
-
-div.innerHTML +=
-"<button class='action' onclick='responder("+i+")'>"+resp+"</button>";
-
+div.innerHTML += "<button class='action' onclick='responder("+i+")'>"+resp+"</button>";
 });
 
 }
@@ -340,31 +296,20 @@ function responder(i){
 let q = perguntas[atual];
 
 if(i===q.c){
-
 ganharPontos(10);
-
-alert("Correto");
-
+alert("Correto!");
 }else{
-
-alert("Errado");
-
+alert("Errado!");
 }
 
 atual++;
 
 if(atual<perguntas.length){
-
 carregarPergunta();
-
 }else{
-
-alert("Quiz finalizado");
-
+alert("Quiz finalizado!");
 atual=0;
-
 carregarPergunta();
-
 }
 
 }
